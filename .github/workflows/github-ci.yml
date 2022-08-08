@@ -36,22 +36,22 @@ env:
 # Ubuntu 20.04 #
 ################
 jobs:
-  format:
-    name: Format
-    runs-on: ubuntu-20.04
-    # Use environment protection (require review)
-    steps:
-      - uses: actions/checkout@v2
-      # Required for pre-commit and pylint
-      - run: pip3 install cpplint pylint docker
-      - run: sudo snap install shfmt
-      - run: sudo apt install shellcheck black
-      # NOTE: This is deprecated in favor of pre-commit.ci
-      - uses: pre-commit/action@v2.0.3
-        with:
-          extra_args: --all-files
-      - name: Pylint
-        run: pylint kit/
+  # format:
+  #   name: Format
+  #   runs-on: ubuntu-20.04
+  #   # Use environment protection (require review)
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     # Required for pre-commit and pylint
+  #     - run: pip3 install cpplint pylint docker
+  #     - run: sudo snap install shfmt
+  #     - run: sudo apt install shellcheck black
+  #     # NOTE: This is deprecated in favor of pre-commit.ci
+  #     - uses: pre-commit/action@v2.0.3
+  #       with:
+  #         extra_args: --all-files
+  #     - name: Pylint
+  #       run: pylint kit/
 
   # test-hekit:
   #   name: Test hekit commands
