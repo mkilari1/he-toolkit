@@ -122,7 +122,7 @@ jobs:
           - c_compiler: clang
             cxx_compiler: clang++
           - c_compiler: gcc
-            cxx_compiler: gcc++
+            cxx_compiler: g++
         #exclude: #Skip debug on mac. TODO: add Debug mode
     steps:
       - uses: actions/checkout@v2
