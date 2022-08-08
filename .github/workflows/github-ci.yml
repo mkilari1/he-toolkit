@@ -118,9 +118,11 @@ jobs:
         HEtoolkit_build: [ON, OFF]
         c_compiler: [clang, gcc]
         os: [ubuntu-20.04]
-        include: # use clang++ with clang only
+        include: # use clang++ and gcc+ with clang only
           - c_compiler: clang
-            cXX_compiler: clang++
+            cxx_compiler: clang++
+          - c_compiler: gcc
+            cxx_compiler: gcc++
         #exclude: #Skip debug on mac. TODO: add Debug mode
     steps:
       - uses: actions/checkout@v2
@@ -128,7 +130,9 @@ jobs:
         run: |
           pip3 install toml
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo "C=${{matrix.c_compiler}}">> $GITHUB_ENV
+          echo "C=${{matrix.c_compiler}}" >> $GITHUB_ENV
+          echo "CXX=${{matrix.cxx_compiler}}" >> $GITHUB_ENV
+
       - name: Init hekit
         run: |
           mkdir -p ~/.hekit
