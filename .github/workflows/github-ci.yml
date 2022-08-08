@@ -113,15 +113,15 @@ jobs:
     defaults:
       run:
         shell: bash
-      strategy:
-        matrix:
-          HEtoolkit_build: [ON, OFF]
-          c_compiler: [clang, gcc]
-          os: [ubuntu-20.04]
-          include: # use clang++ with clang only
-            - c_compiler: clang
-              cXX_compiler: clang++
-          #exclude: #Skip debug on mac. TODO: add Debug mode
+    strategy:
+      matrix:
+        HEtoolkit_build: [ON, OFF]
+        c_compiler: [clang, gcc]
+        os: [ubuntu-20.04]
+        include: # use clang++ with clang only
+          - c_compiler: clang
+            cXX_compiler: clang++
+        #exclude: #Skip debug on mac. TODO: add Debug mode
     steps:
       - uses: actions/checkout@v2
       - name: Setup
