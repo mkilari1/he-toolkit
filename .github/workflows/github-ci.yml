@@ -119,6 +119,8 @@ jobs:
         compiler: [clang, clang-10, gcc]
         os: [ubuntu-20.04]
         include: # use clang++ and gcc+ with clang only
+          - c_compiler: clang
+            cxx_compiler: clang++
           - c_compiler: clang-10
             cxx_compiler: clang++-10
           - c_compiler: gcc
