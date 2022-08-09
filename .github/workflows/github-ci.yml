@@ -108,7 +108,7 @@ jobs:
   #         path: ${{github.job}}_sample-kernels-palisade_${{github.sha}}.json
           # retention-days: 90 # Maximum for free version
   build-and-test-toolkit-helibexpirement:
-    name: 'os=${{matrix.os}} HEtoolkit_build=${{matrix.HEtoolkit_build}}  compiler=${{matrix.compiler}}'
+    name: 'os=${{matrix.os}} HEtoolkit_build=${{matrix.HEtoolkit_build}}  compiler=${{matrix.cxx_compiler}}'
     runs-on: ${{matrix.os}}
     defaults:
       run:
@@ -116,15 +116,13 @@ jobs:
     strategy:
       matrix:
         HEtoolkit_build: [ON, OFF]
-        compiler: [clang, clang-10, gcc]
+        c_compiler: [clang-10, gcc-10]
         os: [ubuntu-20.04]
         include: # use clang++ and gcc+ with clang only
-          - c_compiler: clang
-            cxx_compiler: clang++
           - c_compiler: clang-10
             cxx_compiler: clang++-10
-          - c_compiler: gcc
-            cxx_compiler: g++
+          - c_compiler: gcc-10
+            cxx_compiler: g++-10
 
     steps:
       - uses: actions/checkout@v2
