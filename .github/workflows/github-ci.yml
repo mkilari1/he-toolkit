@@ -109,7 +109,7 @@ jobs:
           # retention-days: 90 # Maximum for free version
   build-and-test-toolkit-helibexpirement:
     name: 'os=${{matrix.os}} HEtoolkit_build=${{matrix.HEtoolkit_build}}  compiler=${{matrix.cxx_compiler}}'
-    runs-on: ${{matrix.os}}
+    runs-on: '${{matrix.os}}'
     defaults:
       run:
         shell: bash
