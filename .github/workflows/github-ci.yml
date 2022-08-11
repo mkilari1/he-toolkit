@@ -142,11 +142,11 @@ jobs:
     strategy:
       matrix:
        # HEtoolkit_build: [ON, OFF]
-        c_compiler: [gcc-10,clang]
+        c_compiler: [gcc-10,clang-10]
         os: [ubuntu-20.04]
         include: # use clang++ and gcc+ with clang only
-          - c_compiler: clang
-            cxx_compiler: clang++
+          - c_compiler: clang-10
+            cxx_compiler: clang++-10
           - c_compiler: gcc-10
             cxx_compiler: g++-10
 
