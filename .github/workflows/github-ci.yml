@@ -142,7 +142,7 @@ jobs:
     strategy:
       matrix:
        # HEtoolkit_build: [ON, OFF]
-        c_compiler: [gcc-10,clang-10]
+        # c_compiler: [gcc-10,clang-10]
         os: [ubuntu-20.04]
         include: # use clang++ and gcc+ with clang only
           - c_compiler: clang-10
@@ -156,9 +156,6 @@ jobs:
         run: |
           pip3 install toml
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          export CC=clang-10
-          export CXX=clang++-10
-
 
       - name: Init hekit
         run: |
