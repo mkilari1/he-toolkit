@@ -156,8 +156,8 @@ jobs:
         run: |
           pip3 install toml
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          export CC=clang-10
-          export CXX=clang++-10
+          echo "CC=${{matrix.c_compiler}}" >> $GITHUB_ENV
+          echo "CXX=${{matrix.cxx_compiler}}" >> $GITHUB_ENV
 
 
       - name: Init hekit
