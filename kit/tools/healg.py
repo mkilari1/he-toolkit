@@ -7,14 +7,15 @@ import math
 import re
 import shutil
 from argparse import ArgumentTypeError
-from subprocess import CalledProcessError, run, PIPE
+from subprocess import CalledProcessError, run, PIPE  # nosec B404
 from sys import stdout, stderr, exit as sys_exit
 from itertools import chain, combinations
 from collections import Counter
 from pathlib import Path
+from kit.utils.files import create_default_workspace
 
 
-def set_gen_primes(subparsers):
+def set_gen_primes_subparser(subparsers):
     """Register subparser to generate primes"""
 
     parser = subparsers.add_parser(
@@ -23,12 +24,16 @@ def set_gen_primes(subparsers):
     )
     parser.add_argument("start", type=int, default=2, help="start number")
     parser.add_argument("stop", type=int, default=100, help="stop number")
-    parser.set_defaults(fn=lambda args: gen_primes(args.start, args.stop))
+    parser.set_defaults(fn=gen_primes)
 
 
-def gen_primes(start: int, stop: int, outfile=stdout):
+def gen_primes(args):
+    """Generates a list of primes from start to stop values inclusive"""
+    write_primes(args.start, args.stop)
+
+
+def write_primes(start: int, stop: int, outfile=stdout):
     """Writes to outfile a list of primes from start to stop values inclusive"""
-
     numbers = range(start, stop + 1)
     primes = [
         factors[0] for factors in compute_prime_factors(numbers) if len(factors) == 1
@@ -38,15 +43,15 @@ def gen_primes(start: int, stop: int, outfile=stdout):
 
 def powerset(iterable):
     """Returns a generator.
-       Note that we do not return the empty set.
-       https://docs.python.org/3/library/itertools.html"""
+    Note that we do not return the empty set.
+    https://docs.python.org/3/library/itertools.html"""
     s = list(iterable)
     return chain.from_iterable(combinations(s, r) for r in range(1, len(s) + 1))
 
 
 def find_ms(ps, ds, factorize):
     """Generator returns the p, gen for max m's for p^d"""
-    prime_factors = factorize(p ** d - 1 for p in ps for d in ds)
+    prime_factors = factorize(p**d - 1 for p in ps for d in ds)
     if prime_factors:
         all_factors = tuple(powerset(primes) for primes in prime_factors)
         pd = ((p, d) for p in ps for d in ds)
@@ -57,7 +62,7 @@ def find_ms(ps, ds, factorize):
 
 def str_to_range(s):
     """Parse a string and return a Python range object.
-       This function expects a positive integer."""
+    This function expects a positive integer."""
     if s.isdigit():
         num = int(s)
         return range(num, num + 1)
@@ -98,8 +103,9 @@ def parse_range_for_primes(string):
     try:
         primes_list = PrimesFromFile(default_primes_filepath)
     except FileNotFoundError:
+        create_default_workspace()
         with default_primes_filepath.open("w", encoding="utf-8") as f:
-            gen_primes(2, 140_000, outfile=f)
+            write_primes(2, 140_000, outfile=f)
         primes_list = PrimesFromFile(default_primes_filepath)
 
     return parse_range(string, filter_fn=primes_list.is_prime)
@@ -122,7 +128,7 @@ class PrimesFromFile:
 
 
 def parse_factor_line(line):
-    """ 'num: f1 f2 f3' -> (num, (f1, f2, f3))"""
+    """'num: f1 f2 f3' -> (num, (f1, f2, f3))"""
     split_line = line.split()  # ['key:', 'v1', 'v2' , ...]
     key = split_line[0]
     if key[-1] != ":":
@@ -134,7 +140,7 @@ def parse_factor_line(line):
 
 def compute_prime_factors(numbers, factor_util="factor"):
     """Return generator. Keys m, Value prime factors.
-       Process out to factor"""
+    Process out to factor"""
 
     numbers = list(numbers)
     if len(numbers) == 0:
@@ -143,7 +149,7 @@ def compute_prime_factors(numbers, factor_util="factor"):
     command_and_args = [factor_util, *map(str, numbers)]
 
     try:
-        out = run(command_and_args, stdout=PIPE, check=True)
+        out = run(command_and_args, stdout=PIPE, check=True)  # nosec B603
     except CalledProcessError as error:
         # Was it a negative number on the input?
         if any(number < 0 for number in numbers):
@@ -159,7 +165,7 @@ def compute_prime_factors(numbers, factor_util="factor"):
     return (parse_factor_line(line)[1] for line in factor_lines)
 
 
-def set_gen_algebras(subparsers):
+def set_gen_algebras_subparser(subparsers):
     """Register subparser to generate algebras"""
     parser = subparsers.add_parser(
         "algebras", description="generate ZZ_p[x]/phi(X) algebras"
@@ -187,8 +193,8 @@ def set_gen_algebras(subparsers):
 
 
 def phi(prime_factors):
-    """"Euler's totient from prime factors.
-        This function assumes that only primes are passed in."""
+    """ "Euler's totient from prime factors.
+    This function assumes that only primes are passed in."""
     c = Counter(prime_factors)
     return math.prod((p - 1) * p ** (k - 1) for p, k in c.items())
 
@@ -200,7 +206,7 @@ def correct_for_d(p, d, m):
 
     This function expects that p is a prime number."""
     for e in range(1, d + 1):
-        if (p ** e) % m == 1:
+        if (p**e) % m == 1:
             break
 
     return e, e != d

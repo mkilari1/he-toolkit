@@ -1,6 +1,14 @@
 # Recommended requirements
 -r requirements.txt
 
-# For testing
+# Testing
 pytest
 pytest-mock
+
+# Linting
+pylint
+bandit
+
+# Type analysis
+types-toml
+mypy
